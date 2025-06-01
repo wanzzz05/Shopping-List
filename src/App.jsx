@@ -69,7 +69,7 @@ function App() {
   return (
     <>
 
-      <h1>Shopping List</h1>
+      <h1>Fashion List</h1>
       <div className="row-placement">
         <label>Item</label>
         <input value={itemName} onChange={handleItemChange} />
