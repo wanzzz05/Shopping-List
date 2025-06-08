@@ -50,7 +50,6 @@ function App() {
 
   };
 
-
   const handleMark = (itemId) => {
     setItems(
       items.map((item) =>
@@ -60,10 +59,6 @@ function App() {
       )
     );
   };
-
-
-
-
 
 
   return (
