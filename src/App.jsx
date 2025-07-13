@@ -1,13 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { getItems } from './Api'
 
 function App() {
   const [itemName, setItemName] = useState('');
   const [qty, setQty] = useState('');
   const [items, setItems] = useState([]);
   const [editState, setEditState] = useState({ edit: false, itemId: '' });
+
+  useEffect(()=>{
+    fetchItems();
+  },[])
+
+  const fetchItems = async ()=> {
+    try{
+      const data = await getItems();
+      setItems(data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  }
 
   const generateRandomId = () => {
     return Math.floor(Math.random() * 100);
@@ -88,7 +102,7 @@ function App() {
       {items?.map((item) => (
         <div className="row-placement">
           <h4 className={item.marked == true ? "cross-text" : ''}>{item.name}</h4>
-          <h4 className={item.marked == true ? "cross-text" : ''}>{item.qty}</h4>
+          <h4 className={item.marked == true ? "cross-text" : ''}>{item.quantity}</h4>
 
           <div className="row-placement">
             <button onClick={() => handleMark(item.id)}>Mark</button>
