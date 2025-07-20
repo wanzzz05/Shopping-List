@@ -34,9 +34,9 @@ export const addItem = async (itemData) => {
     }
 }
 
-export const editItem = async (editData) => {
+export const editItem = async (editedItem) => {
     try {
-        const response = await axios.put(`${API_URL}/${editData}`);
+        const response = await axios.put(`${API_URL}/${editedItem}`);
         console.log(response);
         return response.data
     } catch (error) {

@@ -10,12 +10,12 @@ function App() {
   const [items, setItems] = useState([]);
   const [editState, setEditState] = useState({ edit: false, itemId: '' });
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchItems();
-  },[])
+  }, [])
 
-  const fetchItems = async ()=> {
-    try{
+  const fetchItems = async () => {
+    try {
       const data = await getItems();
       setItems(data);
     } catch (error) {
@@ -41,54 +41,45 @@ function App() {
     } catch (error) {
       console.error("Error", error);
     }
-    
+
   }
 
   const handleDelete = async (itemId) => {
     console.log("deleteitem", itemId)
-    try{
+    try {
       const updatedData = await deleteItem(itemId);
       fetchItems();
     } catch (error) {
       console.error("Error", error);
     }
-     
+
   }
 
 
   const handleEdit = async (item) => {
     setEditState({ edit: true, itemId: item._id });
     setItemName(item.name);
-    setQty(item.qty);
+    setQty(item.quantity);
   };
+
   const saveEdit = async (item) => {
     const editedItem = {
-      name : itemName,
-      quantity : qty,
+      _id : item._id,
+      name: itemName,
+      quantity: qty,
     }
-        try {
-      await editItem(item);
+    try {
+      await editItem(editedItem._id);
       fetchItems();
       setEditState({ edit: false, itemId: '' });
       setItemName("");
       setQty("");
     } catch (error) {
       console.error("Error", error);
-    
-    }};
-  const saveEdit = () => {
-    setItems(
-      items.map((item) =>
-        item.id === editState.itemId
-          ? { ...item, name: itemName, qty: qty }
-          : item
-      )
-    );
-    setEditState({ edit: false, itemId: '' });
-    setItemName("");
-    setQty('');
 
+    }
   };
+
 
   const handleMark = (itemId) => {
     setItems(
