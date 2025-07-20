@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { getItems } from './Api'
+import { getItems, deleteItem, addItem, editItem } from './Api'
 
 function App() {
   const [itemName, setItemName] = useState('');
@@ -23,33 +23,59 @@ function App() {
     }
   }
 
-  const generateRandomId = () => {
-    return Math.floor(Math.random() * 100);
-  }
-
   const handleItemChange = (e) => { setItemName(e.target.value) }
 
   const handleQtyChange = (e) => { setQty(e.target.value) }
 
-  const addItem = () => {
+  const addItemBtn = async () => {
     const newItem = {
-      id: generateRandomId(),
       name: itemName,
-      qty: qty,
+      quantity: qty,
       marked: false
+    };
+    try {
+      const data = await addItem(newItem);
+      fetchItems();
+      setItemName("");
+      setQty("");
+    } catch (error) {
+      console.error("Error", error);
     }
-    setItems([...items, newItem])
+    
   }
 
-  const handleDelete = (id) =>
-    setItems(items.filter(item => item.id !== id))
+  const handleDelete = async (itemId) => {
+    console.log("deleteitem", itemId)
+    try{
+      const updatedData = await deleteItem(itemId);
+      fetchItems();
+    } catch (error) {
+      console.error("Error", error);
+    }
+     
+  }
 
-  const handleEdit = (item) => {
-    setEditState({ edit: true, itemId: item.id });
+
+  const handleEdit = async (item) => {
+    setEditState({ edit: true, itemId: item._id });
     setItemName(item.name);
     setQty(item.qty);
   };
-
+  const saveEdit = async (item) => {
+    const editedItem = {
+      name : itemName,
+      quantity : qty,
+    }
+        try {
+      await editItem(item);
+      fetchItems();
+      setEditState({ edit: false, itemId: '' });
+      setItemName("");
+      setQty("");
+    } catch (error) {
+      console.error("Error", error);
+    
+    }};
   const saveEdit = () => {
     setItems(
       items.map((item) =>
@@ -87,7 +113,7 @@ function App() {
       </div>
       <div>
         {!editState.edit && (
-          <button onClick={addItem}>Add Item</button>
+          <button onClick={addItemBtn}>Add Item</button>
         )}
         {editState.edit && (
           <button onClick={saveEdit}>Save</button>
@@ -106,7 +132,7 @@ function App() {
 
           <div className="row-placement">
             <button onClick={() => handleMark(item.id)}>Mark</button>
-            <button onClick={() => handleDelete(item.id)}>Delete</button>
+            <button onClick={() => handleDelete(item._id)}>Delete</button>
             <button onClick={() => handleEdit(item)}>Edit</button>
           </div>
         </div>
