@@ -62,14 +62,14 @@ function App() {
     setQty(item.quantity);
   };
 
-  const saveEdit = async (item) => {
-    const editedItem = {
-      _id : item._id,
+  const saveEdit = async () => {
+    const editedItemData = {
       name: itemName,
       quantity: qty,
+      marked : false
     }
     try {
-      await editItem(editedItem._id);
+      await editItem(editedItemData, editState.itemId);
       fetchItems();
       setEditState({ edit: false, itemId: '' });
       setItemName("");
