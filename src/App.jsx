@@ -45,7 +45,6 @@ function App() {
   }
 
   const handleDelete = async (itemId) => {
-    console.log("deleteitem", itemId)
     try {
       const updatedData = await deleteItem(itemId);
       fetchItems();
@@ -66,7 +65,7 @@ function App() {
     const editedItemData = {
       name: itemName,
       quantity: qty,
-      marked : false
+      marked: false
     }
     try {
       await editItem(editedItemData, editState.itemId);
@@ -81,15 +80,17 @@ function App() {
   };
 
 
-  const handleMark = (itemId) => {
-    setItems(
-      items.map((item) =>
-        item.id === itemId
-          ? { ...item, marked: !item.marked }
-          : item
-      )
-    );
-  };
+  const handleMark = async (item) => {
+   const markedItem = {
+      marked : !item.marked
+   }
+    try {
+      await editItem(markedItem, item._id);
+      fetchItems();
+    } catch (error) {
+      console.error("Error", error);
+    }
+  }
 
 
   return (
@@ -117,12 +118,12 @@ function App() {
       </div>
 
       {items?.map((item) => (
-        <div className="row-placement">
+        <div className="row-placement" key={item._id}>
           <h4 className={item.marked == true ? "cross-text" : ''}>{item.name}</h4>
           <h4 className={item.marked == true ? "cross-text" : ''}>{item.quantity}</h4>
 
           <div className="row-placement">
-            <button onClick={() => handleMark(item.id)}>Mark</button>
+            <button onClick={() => handleMark(item)}>{item.marked == false ? 'Mark' : 'Unmark'}</button>
             <button onClick={() => handleDelete(item._id)}>Delete</button>
             <button onClick={() => handleEdit(item)}>Edit</button>
           </div>
