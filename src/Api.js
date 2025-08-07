@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/item";
+const API_URL = "https://shopping-list-backend-production.up.railway.app/item";
 
 export const getItems = async ()=> {
     try {
