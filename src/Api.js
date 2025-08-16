@@ -1,17 +1,21 @@
 import axios from "axios";
+const production_mode = false;
 
-const API_URL = "https://shopping-list-backend-production.up.railway.app/item";
+const production = "https://shopping-list-backend-production.up.railway.app/item";
+const dev = "http://localhost:8080";
 
-export const getItems = async ()=> {
+const API_URL = production_mode ? production : dev;
+
+export const getItems = async (userId)=> {
     try {
-        const response = await axios.get(API_URL);
+        const response = await axios.get(`${API_URL}?userId=${userId}`);
         console.log(response);
         return response.data
     } catch (error) {
         console.error('Error fetching items:',error);
         throw error;
     }
-}
+};
 
 export const deleteItem = async (itemId)=> {
     try {
@@ -22,7 +26,7 @@ export const deleteItem = async (itemId)=> {
         console.error('Error fetching items:',error);
         throw error;
     }    
-}
+};
 
 export const addItem = async (itemData) => {
     try {
@@ -32,7 +36,7 @@ export const addItem = async (itemData) => {
     } catch (error) {
         console.error('Error fetching items', error)
     }
-}
+};
 
 export const editItem = async (editedItemData, itemId) => {
     try {
@@ -42,4 +46,35 @@ export const editItem = async (editedItemData, itemId) => {
     } catch (error) {
         console.error('Error fetching items', error)
     }
-}
+};
+
+export const signIn = async (userDetails) => {
+    console.log(userDetails);
+
+    try {
+        const response = await axios.post(
+            `${API_URL}/api/auth/signin`,
+            userDetails
+        );
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching items:", error);
+        throw error;
+    }
+};
+
+export const signUp = async (userDetails) => {
+    console.log(userDetails);
+
+    try {
+        const response = await axios.post(
+            `${API_URL}/api/auth/signup`,
+            userDetails
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching items:", error);
+        throw error;
+    }
+};

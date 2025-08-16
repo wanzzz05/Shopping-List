@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { getItems, deleteItem, addItem, editItem } from './Api'
+import { useState, useEffect } from 'react';
+import '../App.css';
+import { getItems, deleteItem, addItem, editItem } from '../Api.js';
+import { useNavigate } from 'react-router-dom';
 
-function App() {
+function Home() {
   const [itemName, setItemName] = useState('');
   const [qty, setQty] = useState('');
   const [items, setItems] = useState([]);
   const [editState, setEditState] = useState({ edit: false, itemId: '' });
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchItems();
@@ -16,7 +16,8 @@ function App() {
 
   const fetchItems = async () => {
     try {
-      const data = await getItems();
+      const userId = localStorage.getItem("user_id");
+      const data = await getItems(userId);
       setItems(data);
     } catch (error) {
       console.error("Error", error);
@@ -29,6 +30,7 @@ function App() {
 
   const addItemBtn = async () => {
     const newItem = {
+      userId: localStorage.getItem("user_id"),
       name: itemName,
       quantity: qty,
       marked: false
@@ -90,7 +92,12 @@ function App() {
     } catch (error) {
       console.error("Error", error);
     }
-  }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
 
 
   return (
@@ -129,9 +136,12 @@ function App() {
           </div>
         </div>
       ))}
+      <div>
+        <button onClick={handleLogout}>Log out</button>
+      </div>
     </>
   );
 
-}
+};
 
-export default App
+export default Home
